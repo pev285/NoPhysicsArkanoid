@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NONAME 
+namespace NPArkanoid.Colliders
 {
-	public class Wall : MonoBehaviour 
+	public class Wall : AbstractCollider
 	{
-
-	
-	} 
+		protected override void ProcessCollision(Vector3 hitPoint, WallAngle angle)
+		{
+			_ball.ExpectColliderHit(hitPoint, angle);
+		}
+	}
 } 
 
 
