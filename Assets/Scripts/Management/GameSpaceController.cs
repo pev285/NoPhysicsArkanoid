@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NPArkanoid
+namespace NPArkanoid.Management
 {
 	public class GameSpaceController : MonoBehaviour 
 	{
+		private const int WallWidth = 1;
+		private const int WallDepth = 3;
+		private const float FloorDepth = 0.1f;
+
 		public static Vector3 BottomLeft { get; private set; }
 		public static Vector3 UpperRight { get; private set; }
 
@@ -57,8 +61,6 @@ namespace NPArkanoid
 			}
 		}
 
-
-
 		[SerializeField]
 		private Camera Camera;
 
@@ -72,7 +74,7 @@ namespace NPArkanoid
 		[SerializeField]
 		private Transform Left;
 
-		private void Start()
+		private void Awake()
 		{
 			if (Camera == null)
 				Camera = Camera.main;
@@ -88,16 +90,16 @@ namespace NPArkanoid
 
 			//Debug.Log($"{BottomLeft} --> {UpperRight}");
 
-			SetupEnvironment();
+			//SetupEnvironment();
 		}
 
-		private void SetupEnvironment()
+		public void SetupEnvironment()
 		{
 			Floor.position = Center;
-			Floor.localScale = new Vector3(Width, 1, Height);
+			Floor.localScale = new Vector3(Width, FloorDepth, Height);
 
-			Vector3 horizontalWallSize = new Vector3(Width, 2, 1);
-			Vector3 verticalWallSize = new Vector3(1, 2, Height);
+			Vector3 horizontalWallSize = new Vector3(Width, WallDepth, WallWidth);
+			Vector3 verticalWallSize = new Vector3(WallWidth, WallDepth, Height);
 
 			Right.position = RightCenter;
 			Right.localScale = verticalWallSize;

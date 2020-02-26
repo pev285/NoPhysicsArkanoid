@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NPArkanoid
+namespace NONAME 
 {
-	public class SceneLoader : MonoBehaviour 
+	public class Brick : MonoBehaviour 
 	{
 
 	
