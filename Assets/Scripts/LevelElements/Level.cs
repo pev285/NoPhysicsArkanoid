@@ -13,9 +13,20 @@ namespace NPArkanoid.LevelElements
 		{
 			Instance = this;
 		}
-        #endregion
+		#endregion
 
-        public ILevelStats Stats { get; private set; } = new LevelStats();
+		[SerializeField]
+		private Ball _ball;
+
+		[SerializeField]
+		private LevelStats _stats = new LevelStats();
+        public ILevelStats Stats
+		{
+			get
+			{
+				return _stats;
+			}
+		}
 
 		public Ball Ball
 		{
@@ -25,9 +36,11 @@ namespace NPArkanoid.LevelElements
 			}
 		}
 
-		[SerializeField]
-		private Ball _ball;
 
+		private void Start()
+		{
+			Ball.StartBall(new Vector3(1, 0, 1));
+		}
 	} 
 } 
 

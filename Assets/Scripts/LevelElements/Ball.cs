@@ -29,7 +29,8 @@ namespace NPArkanoid.LevelElements
 		private State _state;
 		private Transform _transform;
 
-		private float Speed;
+		private float _speed;
+		private float _hitForce;
 		private Vector3 _direction;
 
 		private void Awake()
@@ -39,14 +40,31 @@ namespace NPArkanoid.LevelElements
 
 		private void Start()
 		{
+			Subscribe();
 			UpdateParameters();
+		}
+
+		private void OnDestroy()
+		{
+			Unsubscribe();
+		}
+
+		private void Subscribe()
+		{
+			Level.Instance.Stats.Changed += UpdateParameters;
+		}
+
+		private void Unsubscribe()
+		{
+			Level.Instance.Stats.Changed -= UpdateParameters;
 		}
 
 		private void ResetBall()
 		{
 			_state = State.Slave;
-
 			_transform = transform;
+
+			NextPosition = Position;
 			Radius = 0.5f * _transform.localScale.x;
 		}
 
@@ -54,14 +72,32 @@ namespace NPArkanoid.LevelElements
 		{
 			var stats = Level.Instance.Stats;
 
-			Speed = stats.BallSpeed;
+			_speed = stats.BallSpeed;
+			_hitForce = stats.BallForce;
 		}
 
 
 		public void StartBall(Vector3 direction)
 		{
-			_direction = direction;
+			_direction = direction.normalized;
 			TransitionToState(State.Moving);
+		}
+
+		public void ExpectColliderHit(Vector3 point, WallAngle angle)
+		{
+			NextPosition = point;
+
+			switch (angle)
+			{
+				case WallAngle.Zero:
+					_direction.z = -_direction.z;
+					break;
+				case WallAngle.HalfPi:
+					_direction.x = -_direction.x;
+					break;
+				default:
+					throw new NotImplementedException("Unexpected wall angle");
+			}
 		}
 
 		private void TransitionToState(State state)
@@ -103,7 +139,7 @@ namespace NPArkanoid.LevelElements
 		{
 			_transform.position = NextPosition; 
 
-			NextPosition = Time.deltaTime * Speed * _direction;
+			NextPosition = Position + Time.deltaTime * _speed * _direction;
 		}
 	} 
 } 

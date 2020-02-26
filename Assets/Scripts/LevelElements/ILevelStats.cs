@@ -11,6 +11,7 @@ namespace NPArkanoid.LevelElements
 
 		float BallSpeed { get; }
 		float RacketWidth { get; }
+		float BallForce { get; }
 	}
 } 
 

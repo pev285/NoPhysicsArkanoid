@@ -5,12 +5,13 @@ using UnityEngine;
 
 namespace NPArkanoid.LevelElements
 {
+    [Serializable]
     public class LevelStats : ILevelStats
     {
         public event Action Changed = () => { };
 
-
-        private float _ballSpeed = 5;
+        [SerializeField]
+        private float _ballSpeed = 5f;
         public float BallSpeed
         {
             get
@@ -24,7 +25,23 @@ namespace NPArkanoid.LevelElements
             }
         }
 
-        private float _racketWidth;
+        [SerializeField]
+        private float _ballForce = 1f;
+        public float BallForce
+        {
+            get
+            {
+                return _ballForce;
+            }
+            set
+            {
+                _ballForce = value;
+                Changed();
+            }
+        }
+
+        [SerializeField]
+        private float _racketWidth = 3f;
         public float RacketWidth
         {
             get
@@ -37,7 +54,6 @@ namespace NPArkanoid.LevelElements
                 Changed();
             }
         }
-
     }
 }
 
