@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NPArkanoid.LevelElements 
+namespace NoPhysArkanoid.LevelElements 
 {
 	public interface ILevelStats  
 	{

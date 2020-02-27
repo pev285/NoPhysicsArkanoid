@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace NPArkanoid.Management
+namespace NoPhysArkanoid.Management
 {
 	public static class SceneLoader 
 	{

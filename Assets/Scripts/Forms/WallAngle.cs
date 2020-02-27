@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NPArkanoid
+namespace NoPhysArkanoid
 {
 	public enum WallAngle
 	{

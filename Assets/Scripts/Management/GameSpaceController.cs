@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NPArkanoid.Management
+namespace NoPhysArkanoid.Management
 {
 	public class GameSpaceController : MonoBehaviour 
 	{
@@ -17,7 +17,7 @@ namespace NPArkanoid.Management
 		{
 			get
 			{
-				return UpperRight.z - BottomLeft.z;
+				return UpperRight.y - BottomLeft.y;
 			}
 		}
 
@@ -41,7 +41,7 @@ namespace NPArkanoid.Management
 		{
 			get
 			{
-				return new Vector3(UpperRight.x, UpperRight.y, 0.5f * (UpperRight.z + BottomLeft.z));
+				return new Vector3(UpperRight.x, 0.5f * (UpperRight.y + BottomLeft.y), UpperRight.z);
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace NPArkanoid.Management
 		{
 			get
 			{
-				return new Vector3(BottomLeft.x, BottomLeft.y, 0.5f * (UpperRight.z + BottomLeft.z));
+				return new Vector3(BottomLeft.x, 0.5f * (UpperRight.y + BottomLeft.y), BottomLeft.z);
 			}
 		}
 
@@ -85,21 +85,17 @@ namespace NPArkanoid.Management
 			BottomLeft = Camera.ScreenToWorldPoint(new Vector2(0, 0));
 			UpperRight = Camera.ScreenToWorldPoint(new Vector2(width, height));
 
-			BottomLeft = new Vector3(BottomLeft.x, 0, BottomLeft.z);
-			UpperRight = new Vector3(UpperRight.x, 0, UpperRight.z);
-
-			//Debug.Log($"{BottomLeft} --> {UpperRight}");
-
-			//SetupEnvironment();
+			BottomLeft = new Vector3(BottomLeft.x, BottomLeft.y, 0);
+			UpperRight = new Vector3(UpperRight.x, UpperRight.y, 0);
 		}
 
 		public void SetupEnvironment()
 		{
 			Floor.position = Center;
-			Floor.localScale = new Vector3(Width, FloorDepth, Height);
+			Floor.localScale = new Vector3(Width, Height, FloorDepth);
 
-			Vector3 horizontalWallSize = new Vector3(Width, WallDepth, WallWidth);
-			Vector3 verticalWallSize = new Vector3(WallWidth, WallDepth, Height);
+			Vector3 horizontalWallSize = new Vector3(Width, WallWidth, WallDepth);
+			Vector3 verticalWallSize = new Vector3(WallWidth, Height, WallDepth);
 
 			Right.position = RightCenter;
 			Right.localScale = verticalWallSize;

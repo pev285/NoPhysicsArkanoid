@@ -1,9 +1,10 @@
-﻿using System;
+﻿using NoPhysArkanoid.Forms;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NPArkanoid.LevelElements
+namespace NoPhysArkanoid.LevelElements
 {
 	public class Level : MonoBehaviour 
 	{
@@ -16,10 +17,11 @@ namespace NPArkanoid.LevelElements
 		#endregion
 
 		[SerializeField]
-		private Ball _ball;
+		private List<Ball> _balls;
 
 		[SerializeField]
 		private LevelStats _stats = new LevelStats();
+
         public ILevelStats Stats
 		{
 			get
@@ -28,18 +30,18 @@ namespace NPArkanoid.LevelElements
 			}
 		}
 
-		public Ball Ball
+		public IReadOnlyList<Ball> Balls
 		{
 			get
 			{
-				return _ball;
+				return _balls;
 			}
 		}
 
 
 		private void Start()
 		{
-			Ball.StartBall(new Vector3(1, 0, 1));
+			Balls[0].StartBall(new Vector3(1, 1, 0));
 		}
 	} 
 } 

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using NoPhysArkanoid.LevelElements;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NPArkanoid.LevelElements
+namespace NoPhysArkanoid.Forms
 {
 	public class Ball : MonoBehaviour 
 	{

@@ -7,7 +7,7 @@ using System;
 using UnityEditor;
 #endif
 
-namespace NPArkanoid.Management
+namespace NoPhysArkanoid.Management
 {
 	public class GameManager : MonoBehaviour 
 	{
