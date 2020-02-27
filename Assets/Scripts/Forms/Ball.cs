@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NoPhysArkanoid.Forms
 {
-	public class Ball : MonoBehaviour 
+	public class Ball : CircleFigure
 	{
 		private enum State
 		{
@@ -15,27 +15,28 @@ namespace NoPhysArkanoid.Forms
 			Paused,
 		}
 
-		public float Radius { get; private set; }
-		public Vector3 Position 
-		{
-			get
-			{
-				return _transform.position;
-			}
-		}
-		public Vector3 NextPosition { get; private set; }
+		//public float Radius { get; private set; }
+		//public Vector3 Position 
+		//{
+		//	get
+		//	{
+		//		return _transform.position;
+		//	}
+		//}
+		//public Vector3 NextPosition { get; private set; }
 
 
 
 		private State _state;
-		private Transform _transform;
+		//private Transform _transform;
 
 		private float _speed;
 		private float _hitForce;
 		private Vector3 _direction;
 
-		private void Awake()
+		protected override void Awake()
 		{
+			base.Awake();
 			ResetBall();
 		}
 
@@ -63,7 +64,6 @@ namespace NoPhysArkanoid.Forms
 		private void ResetBall()
 		{
 			_state = State.Slave;
-			_transform = transform;
 
 			NextPosition = Position;
 			Radius = 0.5f * _transform.localScale.x;
@@ -84,16 +84,18 @@ namespace NoPhysArkanoid.Forms
 			TransitionToState(State.Moving);
 		}
 
-		public void ExpectColliderHit(Vector3 point, WallAngle angle)
+		public void ExpectColliderHit(Vector3 point, EdgeAngle angle)
 		{
+			Debug.Log($"point={point}, angle={angle.ToString()}");
+
 			NextPosition = point;
 
 			switch (angle)
 			{
-				case WallAngle.Zero:
-					_direction.z = -_direction.z;
+				case EdgeAngle.Zero:
+					_direction.y = -_direction.y;
 					break;
-				case WallAngle.HalfPi:
+				case EdgeAngle.HalfPi:
 					_direction.x = -_direction.x;
 					break;
 				default:

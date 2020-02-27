@@ -6,37 +6,17 @@ using UnityEngine;
 
 namespace NoPhysArkanoid.Forms
 {
+	[RequireComponent(typeof(BoxFigure))]
 	public abstract class BallsReflector : MonoBehaviour 
 	{
-		protected abstract void ProcessCollision(Ball ball, Vector3 hitPoint, WallAngle angle);
+		protected abstract void ProcessCollision(Ball ball, Vector3 hitPoint, EdgeAngle angle);
 
-		protected float _width;
-		protected float _height;
 
-		protected Vector3 _position;
-		protected Transform _transform;
+		protected BoxFigure _boxFigure;
 
-		protected Vector3 _tl;
-		protected Vector3 _bl;
-		protected Vector3 _tr;
-		protected Vector3 _br;
-
-		protected virtual void Awake()
+		private void Awake()
 		{
-			_transform = transform;
-		}
-	
-		protected virtual void Start()
-		{
-			_position = _transform.position;
-
-			_width = _transform.localScale.x;
-			_height = _transform.localScale.z;
-
-			_tl = new Vector3(_position.x - 0.5f * _width, _position.y + 0.5f * _height);
-			_tr = new Vector3(_position.x + 0.5f * _width, _position.y + 0.5f * _height);
-			_bl = new Vector3(_position.x - 0.5f * _width, _position.y - 0.5f * _height);
-			_br = new Vector3(_position.x + 0.5f * _width, _position.y - 0.5f * _height);
+			_boxFigure = GetComponent<BoxFigure>();
 		}
 
 		private void Update()
@@ -49,10 +29,15 @@ namespace NoPhysArkanoid.Forms
 
 			foreach(var ball in balls)
 			{
+				Vector3 point = Vector3.zero;
+				EdgeAngle angle = EdgeAngle.Zero;
 
+
+				if (_boxFigure.CheckCollision(ball, out point, out angle))
+					ProcessCollision(ball, point, angle);
+
+				/*
 				bool found = false;
-				Vector3 bestPoint = Vector3.zero;
-				WallAngle bestAngle = WallAngle.Zero;
 
 				var ballPosition = ball.Position;
 				var ballNextPosition = ball.NextPosition;
@@ -68,7 +53,8 @@ namespace NoPhysArkanoid.Forms
 				if (found == false)
 					return;
 
-				ProcessCollision(ball, bestPoint, bestAngle);
+				*/
+
 			}
 
 		}

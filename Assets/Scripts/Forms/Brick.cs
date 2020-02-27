@@ -7,7 +7,7 @@ namespace NoPhysArkanoid.Forms
 {
 	public class Brick : BallsReflector
 	{
-		protected override void ProcessCollision(Ball ball, Vector3 hitPoint, WallAngle angle)
+		protected override void ProcessCollision(Ball ball, Vector3 hitPoint, EdgeAngle angle)
 		{
 			throw new System.NotImplementedException();
 		}

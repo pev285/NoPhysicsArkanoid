@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NoPhysArkanoid
 {
-	public enum WallAngle
+	public enum EdgeAngle
 	{
 		Zero,
 		HalfPi

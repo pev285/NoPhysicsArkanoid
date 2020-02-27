@@ -7,9 +7,9 @@ namespace NoPhysArkanoid.Forms
 {
 	public class Wall : BallsReflector
 	{
-		protected override void ProcessCollision(Ball ball, Vector3 hitPoint, WallAngle angle)
+		protected override void ProcessCollision(Ball ball, Vector3 hitPoint, EdgeAngle angle)
 		{
-			//_ball.ExpectColliderHit(hitPoint, angle);
+			ball.ExpectColliderHit(hitPoint, angle);
 		}
 	}
 } 

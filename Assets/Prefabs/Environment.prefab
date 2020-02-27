@@ -87,7 +87,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 8, y: 0, z: 0, w: 4e-45}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -187,6 +187,7 @@ GameObject:
   - component: {fileID: 1310103701239224294}
   - component: {fileID: 1310103701239224295}
   - component: {fileID: 1874347592}
+  - component: {fileID: 1686187633}
   m_Layer: 0
   m_Name: RightWall
   m_TagString: Untagged
@@ -276,6 +277,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c155d4a34a6a8df498e542378e360709, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1686187633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310103701239224293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9122393832508b4bb9e180b09a1774f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1310103701960489239
@@ -418,6 +431,7 @@ GameObject:
   - component: {fileID: 1310103702683081443}
   - component: {fileID: 1310103702683081440}
   - component: {fileID: 1236782781}
+  - component: {fileID: 1306798892}
   m_Layer: 0
   m_Name: UpWall
   m_TagString: Untagged
@@ -509,6 +523,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c155d4a34a6a8df498e542378e360709, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1306798892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310103702683081446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9122393832508b4bb9e180b09a1774f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1310103702862106998
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,6 +548,7 @@ GameObject:
   - component: {fileID: 1310103702862106995}
   - component: {fileID: 1310103702862106992}
   - component: {fileID: 271647139}
+  - component: {fileID: 253558891}
   m_Layer: 0
   m_Name: LeftWall
   m_TagString: Untagged
@@ -611,5 +638,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c155d4a34a6a8df498e542378e360709, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &253558891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310103702862106998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9122393832508b4bb9e180b09a1774f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
