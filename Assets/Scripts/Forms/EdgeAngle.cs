@@ -7,7 +7,9 @@ namespace NoPhysArkanoid
 	public enum EdgeAngle
 	{
 		Zero,
-		HalfPi
+		D90,
+		D45,
+		D135
 	} 
 } 
 

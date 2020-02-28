@@ -86,17 +86,25 @@ namespace NoPhysArkanoid.Forms
 
 		public void ExpectColliderHit(Vector3 point, EdgeAngle angle)
 		{
-			Debug.Log($"point={point}, angle={angle.ToString()}");
+			Debug.Log($"point={point}, angle={angle.ToString()}, currentDirection = {_direction}");
 
-			NextPosition = point;
+			//NextPosition = point;
+			NextPosition = (Position + NextPosition)/2;
 
 			switch (angle)
 			{
 				case EdgeAngle.Zero:
 					_direction.y = -_direction.y;
 					break;
-				case EdgeAngle.HalfPi:
+				case EdgeAngle.D90:
 					_direction.x = -_direction.x;
+					break;
+				case EdgeAngle.D45:
+					Swap(ref _direction.x, ref _direction.y);
+					break;
+				case EdgeAngle.D135:
+					Swap(ref _direction.x, ref _direction.y);
+					_direction = -_direction;
 					break;
 				default:
 					throw new NotImplementedException("Unexpected wall angle");
@@ -108,6 +116,12 @@ namespace NoPhysArkanoid.Forms
 			_state = state;
 		}
 
+		private void Swap(ref float a, ref float b)
+		{
+			var tmp = a;
+			a = b;
+			b = tmp;
+		}
 
 		private void Update()
 		{
