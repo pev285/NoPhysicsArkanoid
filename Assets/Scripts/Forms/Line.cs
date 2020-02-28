@@ -9,13 +9,13 @@ namespace NoPhysArkanoid.Forms
     {
         //-- Normal equation: x * normal.x + y * normal.y = coeff
         private float _coeff;
-        private Vector2 _normal;
+        public Vector2 Normal;
 
         public bool IsHorizontal
         {
             get
             {
-                return Mathf.Approximately(_normal.x, 0);
+                return Mathf.Approximately(Normal.x, 0);
             }
         }
 
@@ -23,7 +23,7 @@ namespace NoPhysArkanoid.Forms
         {
             get
             {
-                return Mathf.Approximately(_normal.y, 0);
+                return Mathf.Approximately(Normal.y, 0);
             }
         }
 
@@ -56,7 +56,7 @@ namespace NoPhysArkanoid.Forms
             var line = new Line();
             var magn = new Vector2(a, b).magnitude;
 
-            line._normal = new Vector2(a / magn, b / magn);
+            line.Normal = new Vector2(a / magn, b / magn);
             line._coeff = c / magn;
 
             return line;
@@ -65,7 +65,7 @@ namespace NoPhysArkanoid.Forms
 
         public float NormalFunction(Vector2 point)
         {
-            return Vector2.Dot(point, _normal) - _coeff;
+            return Vector2.Dot(point, Normal) - _coeff;
         }
 
         public Vector2 GetProjectionOf(Vector2 point)
@@ -73,7 +73,7 @@ namespace NoPhysArkanoid.Forms
             if (Mathf.Approximately(NormalFunction(point), 0))
                 return point;
 
-            var perpendLine = CreateFromPointAndDirection(point, _normal);
+            var perpendLine = CreateFromPointAndDirection(point, Normal);
             return FindIntersection(this, perpendLine);
         }
 
@@ -85,15 +85,15 @@ namespace NoPhysArkanoid.Forms
 
         public static Vector2 FindIntersection(Line line1, Line line2)
         {
-            if (Mathf.Abs(Vector2.Dot(line1._normal, line2._normal)) == 1)
+            if (Mathf.Abs(Vector2.Dot(line1.Normal, line2.Normal)) == 1)
                 throw new ArgumentException("Can't find intersection of two collinear lines");
 
-            var a1 = line1._normal.x;
-            var b1 = line1._normal.y;
+            var a1 = line1.Normal.x;
+            var b1 = line1.Normal.y;
             var c1 = line1._coeff;
 
-            var a2 = line2._normal.x;
-            var b2 = line2._normal.y;
+            var a2 = line2.Normal.x;
+            var b2 = line2.Normal.y;
             var c2 = line2._coeff;
 
             return FindIntersection(a1, b1, c1, a2, b2, c2);

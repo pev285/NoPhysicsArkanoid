@@ -7,11 +7,13 @@ namespace NoPhysArkanoid.LevelElements
 {
 	public interface ILevelStats  
 	{
-		event Action Changed;
+		event Action Modified;
 
 		float BallSpeed { get; }
+		float BallRadius { get; }
+		
+		int BallForce { get; }
 		float RacketWidth { get; }
-		float BallForce { get; }
 	}
 } 
 

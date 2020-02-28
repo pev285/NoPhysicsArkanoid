@@ -23,8 +23,11 @@ namespace NoPhysArkanoid.Forms
 		protected Vector3 _tr;
 		protected Vector3 _br;
 
+		private float _sqrt2;
+
 		protected virtual void Awake()
 		{
+			_sqrt2 = Mathf.Sqrt(2f);
 			_transform = transform;
 		}
 
@@ -66,18 +69,18 @@ namespace NoPhysArkanoid.Forms
 			if (IsInExtendedBox(radius, nextPosition) == false)
 				return false;
 
-			if (ClosestIsCorner(ref touchPoint, ref wallAngle, nextPosition))
+			if (ClosestIsCorner(ref touchPoint, ref wallAngle, nextPosition, radius))
 				return IsCloseEnough(touchPoint, nextPosition, radius);
 
 
-			if (IsOutOfLimits(ref touchPoint, ref wallAngle, nextPosition))
+			if (IsOutOfLimits(ref touchPoint, ref wallAngle, nextPosition, radius))
 				return true;
 
-			DefineByNearestEdge(ref touchPoint, ref wallAngle, position);
+			DefineByNearestEdge(ref touchPoint, ref wallAngle, position, radius);
 			return true;
 		}
 
-		private void DefineByNearestEdge(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position)
+		private void DefineByNearestEdge(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
 		{
 			Vector3 leftPoint = Line.CreateFromTwoPoints(_tl, _bl).GetProjectionOf(position);
 			Vector3 rightPoint = Line.CreateFromTwoPoints(_tr, _br).GetProjectionOf(position);
@@ -91,6 +94,8 @@ namespace NoPhysArkanoid.Forms
 			var bottomDistance = (position - bottomPoint).magnitude;
 
 			touchPoint = leftPoint;
+			touchPoint.x -= radius;
+
 			wallAngle = EdgeAngle.D90;
 			var distance = leftDistance;
 
@@ -98,6 +103,8 @@ namespace NoPhysArkanoid.Forms
 			if (rightDistance < distance)
 			{
 				touchPoint = rightPoint;
+				touchPoint.x += radius;
+
 				wallAngle = EdgeAngle.D90;
 				distance = rightDistance;
 			}
@@ -105,6 +112,8 @@ namespace NoPhysArkanoid.Forms
 			if (topDistance < distance)
 			{
 				touchPoint = topPoint;
+				touchPoint.y += radius;
+
 				wallAngle = EdgeAngle.Zero;
 				distance = topDistance;
 			}
@@ -112,55 +121,73 @@ namespace NoPhysArkanoid.Forms
 			if (bottomDistance < distance)
 			{
 				touchPoint = bottomPoint;
+				touchPoint.y -= radius;
+
 				wallAngle = EdgeAngle.Zero;
 				distance = bottomDistance;
 			}
 		}
 
-		private bool IsOutOfLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position)
+		private bool IsOutOfLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
 		{
-			if (IsOutOfXLimits(ref touchPoint, ref wallAngle, position))
+			if (IsOutOfXLimits(ref touchPoint, ref wallAngle, position, radius))
 				return true;
 
-			if (IsOutOfYLimits(ref touchPoint, ref wallAngle, position))
+			if (IsOutOfYLimits(ref touchPoint, ref wallAngle, position, radius))
 				return true;
 
 			return false;
 		}
 
-		private bool IsOutOfXLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position)
+		private bool IsOutOfXLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
 		{
 			if (position.x > _left && position.x < _right)
 				return false;
 
+			float shift = 0;
 			Line line = null;
 
 			if (position.x >= _right)
+			{
+				shift = radius;
 				line = Line.CreateFromTwoPoints(_tr, _br);
+			}
 			else
+			{
+				shift = -radius;
 				line = Line.CreateFromTwoPoints(_tl, _bl);
+			}
 
 			wallAngle = EdgeAngle.D90;
 			touchPoint = line.GetProjectionOf(position);
 
+			touchPoint.x += shift;
 			return true;
 		}
 
-		private bool IsOutOfYLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position)
+		private bool IsOutOfYLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
 		{
 			if (position.y > _bottom && position.y < _top)
 				return false;
 
+			float shift = 0;
 			Line line = null;
 
 			if (position.y >= _top)
+			{
+				shift = radius;
 				line = Line.CreateFromTwoPoints(_tl, _tr);
+			}
 			else
+			{
+				shift = -radius;
 				line = Line.CreateFromTwoPoints(_bl, _br);
+			}
 
 			wallAngle = EdgeAngle.Zero;
 			touchPoint = line.GetProjectionOf(position);
 
+			touchPoint.y += shift;
 			return true;
 		}
 
@@ -174,37 +201,38 @@ namespace NoPhysArkanoid.Forms
 			return true;
 		}
 
-		private bool ClosestIsCorner(ref Vector3 point, ref EdgeAngle angle, Vector3 nextPosition)
+		private bool ClosestIsCorner(ref Vector3 point, ref EdgeAngle angle, Vector3 position, float radius)
 		{
 			var thePointIsCorner = false;
+			float shift = radius * _sqrt2;
 
-			if (nextPosition.x > _right && nextPosition.y > _top)
+			if (position.x > _right && position.y > _top)
 			{
-				point = _tr;
+				point = _tr + new Vector3(shift, shift);
 				angle = EdgeAngle.D45;
 
 				thePointIsCorner = true;
 			}
 
-			if (nextPosition.x < _left && nextPosition.y > _top)
+			if (position.x < _left && position.y > _top)
 			{
-				point = _tl;
+				point = _tl + new Vector3(-shift, shift);
 				angle = EdgeAngle.D135;
 
 				thePointIsCorner = true;
 			}
 
-			if (nextPosition.x > _right && nextPosition.y < _bottom)
+			if (position.x > _right && position.y < _bottom)
 			{
-				point = _br;
+				point = _br + new Vector3(shift, -shift);
 				angle = EdgeAngle.D135;
 
 				thePointIsCorner = true;
 			}
 
-			if (nextPosition.x < _left && nextPosition.y < _bottom)
+			if (position.x < _left && position.y < _bottom)
 			{
-				point = _bl;
+				point = _bl + new Vector3(-shift, -shift);
 				angle = EdgeAngle.D45;
 
 				thePointIsCorner = true;

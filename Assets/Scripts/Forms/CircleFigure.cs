@@ -6,7 +6,21 @@ namespace NoPhysArkanoid.Forms
 {
 	public class CircleFigure : MonoBehaviour 
 	{
-		public float Radius { get; protected set; }
+		private float _radius;
+		public float Radius 
+		{ 
+			get
+			{
+				return _radius;
+			} 
+			protected set
+			{
+				_radius = value;
+
+				var diam = _radius * 2;
+				_transform.localScale = new Vector3(diam, diam, diam);
+			} 
+		}
 
 		public Vector3 Position
 		{

@@ -15,23 +15,9 @@ namespace NoPhysArkanoid.Forms
 			Paused,
 		}
 
-		//public float Radius { get; private set; }
-		//public Vector3 Position 
-		//{
-		//	get
-		//	{
-		//		return _transform.position;
-		//	}
-		//}
-		//public Vector3 NextPosition { get; private set; }
-
-
-
 		private State _state;
-		//private Transform _transform;
 
 		private float _speed;
-		private float _hitForce;
 		private Vector3 _direction;
 
 		protected override void Awake()
@@ -53,20 +39,18 @@ namespace NoPhysArkanoid.Forms
 
 		private void Subscribe()
 		{
-			Level.Instance.Stats.Changed += UpdateParameters;
+			Level.Instance.Stats.Modified += UpdateParameters;
 		}
 
 		private void Unsubscribe()
 		{
-			Level.Instance.Stats.Changed -= UpdateParameters;
+			Level.Instance.Stats.Modified -= UpdateParameters;
 		}
 
 		private void ResetBall()
 		{
 			_state = State.Slave;
-
 			NextPosition = Position;
-			Radius = 0.5f * _transform.localScale.x;
 		}
 
 		private void UpdateParameters()
@@ -74,7 +58,7 @@ namespace NoPhysArkanoid.Forms
 			var stats = Level.Instance.Stats;
 
 			_speed = stats.BallSpeed;
-			_hitForce = stats.BallForce;
+			Radius = stats.BallRadius;
 		}
 
 
@@ -88,8 +72,8 @@ namespace NoPhysArkanoid.Forms
 		{
 			Debug.Log($"point={point}, angle={angle.ToString()}, currentDirection = {_direction}");
 
-			//NextPosition = point;
-			NextPosition = (Position + NextPosition)/2;
+			NextPosition = point;
+			//NextPosition = (Position + NextPosition)/2;
 
 			switch (angle)
 			{
@@ -101,13 +85,13 @@ namespace NoPhysArkanoid.Forms
 					break;
 				case EdgeAngle.D45:
 					Swap(ref _direction.x, ref _direction.y);
+					_direction = -_direction;
 					break;
 				case EdgeAngle.D135:
 					Swap(ref _direction.x, ref _direction.y);
-					_direction = -_direction;
 					break;
 				default:
-					throw new NotImplementedException("Unexpected wall angle");
+					throw new ArgumentException("Unexpected wall angle");
 			}
 		}
 
@@ -137,7 +121,7 @@ namespace NoPhysArkanoid.Forms
 					UpdatePaused();
 					break;
 				default:
-					throw new NotImplementedException("Unexpected state");
+					throw new ArgumentException("Unexpected state");
 			}
 		}
 
@@ -150,7 +134,6 @@ namespace NoPhysArkanoid.Forms
 		{
 			NextPosition = Position;
 		}
-
 
 		private void UpdateMoving()
 		{
