@@ -66,15 +66,23 @@ namespace NoPhysArkanoid.Forms
 			var position = circle.Position; //-- TODO: Use old and new positions to check trajectory --
 			var nextPosition = circle.NextPosition;
 
+			Debug.Log($"pos={position}, np={nextPosition}, br={_br}");
+
 			if (IsInExtendedBox(radius, nextPosition) == false)
 				return false;
 
-			if (ClosestIsCorner(ref touchPoint, ref wallAngle, nextPosition, radius))
-				return IsCloseEnough(touchPoint, nextPosition, radius);
+			Debug.Log("2");
 
+			Vector2 bestCorner;
+			if (ClosestIsCorner(ref touchPoint, ref wallAngle, nextPosition, radius, out bestCorner))
+				return IsCloseEnough(bestCorner, nextPosition, radius);
+
+			Debug.Log("3");
 
 			if (IsOutOfLimits(ref touchPoint, ref wallAngle, nextPosition, radius))
 				return true;
+
+			Debug.Log("4");
 
 			DefineByNearestEdge(ref touchPoint, ref wallAngle, position, radius);
 			return true;
@@ -193,6 +201,8 @@ namespace NoPhysArkanoid.Forms
 
 		private static bool IsCloseEnough(Vector3 point1, Vector3 point2, float maxDistance)
 		{
+			Debug.Log($"[is close]>> {point1}:{point2} < {maxDistance}");
+
 			var dist = (point2 - point1).magnitude;
 
 			if (dist > maxDistance)
@@ -201,40 +211,46 @@ namespace NoPhysArkanoid.Forms
 			return true;
 		}
 
-		private bool ClosestIsCorner(ref Vector3 point, ref EdgeAngle angle, Vector3 position, float radius)
+		private bool ClosestIsCorner(ref Vector3 point, ref EdgeAngle angle, Vector3 position, float radius, out Vector2 bestCorner)
 		{
+			bestCorner = Vector2.zero;
+
 			var thePointIsCorner = false;
 			float shift = radius * _sqrt2;
 
 			if (position.x > _right && position.y > _top)
 			{
+				bestCorner = _tr;
 				point = _tr + new Vector3(shift, shift);
-				angle = EdgeAngle.D45;
 
+				angle = EdgeAngle.D45;
 				thePointIsCorner = true;
 			}
 
 			if (position.x < _left && position.y > _top)
 			{
+				bestCorner = _tl;
 				point = _tl + new Vector3(-shift, shift);
-				angle = EdgeAngle.D135;
 
+				angle = EdgeAngle.D135;
 				thePointIsCorner = true;
 			}
 
 			if (position.x > _right && position.y < _bottom)
 			{
+				bestCorner = _br;
 				point = _br + new Vector3(shift, -shift);
-				angle = EdgeAngle.D135;
 
+				angle = EdgeAngle.D135;
 				thePointIsCorner = true;
 			}
 
 			if (position.x < _left && position.y < _bottom)
 			{
+				bestCorner = _bl;
 				point = _bl + new Vector3(-shift, -shift);
-				angle = EdgeAngle.D45;
 
+				angle = EdgeAngle.D45;
 				thePointIsCorner = true;
 			}
 

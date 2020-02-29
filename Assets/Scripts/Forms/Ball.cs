@@ -70,7 +70,7 @@ namespace NoPhysArkanoid.Forms
 
 		public void ExpectColliderHit(Vector3 point, EdgeAngle angle)
 		{
-			Debug.Log($"point={point}, angle={angle.ToString()}, currentDirection = {_direction}");
+			Debug.Log($">>>> ** point={point}, angle={angle.ToString()}, currentDirection = {_direction}");
 
 			NextPosition = point;
 			//NextPosition = (Position + NextPosition)/2;
