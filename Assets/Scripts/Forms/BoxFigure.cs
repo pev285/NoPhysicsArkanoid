@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -66,26 +67,26 @@ namespace NoPhysArkanoid.Forms
 			var position = circle.Position; //-- TODO: Use old and new positions to check trajectory --
 			var nextPosition = circle.NextPosition;
 
-			Debug.Log($"pos={position}, np={nextPosition}, br={_br}");
-
 			if (IsInExtendedBox(radius, nextPosition) == false)
 				return false;
 
-			Debug.Log("2");
+			if (IsInCloseBox(nextPosition) == false)
+				return EvaluateReflection(ref touchPoint, ref wallAngle, nextPosition, radius);
 
-			Vector2 bestCorner;
-			if (ClosestIsCorner(ref touchPoint, ref wallAngle, nextPosition, radius, out bestCorner))
-				return IsCloseEnough(bestCorner, nextPosition, radius);
-
-			Debug.Log("3");
-
-			if (IsOutOfLimits(ref touchPoint, ref wallAngle, nextPosition, radius))
+			if (EvaluateReflection(ref touchPoint, ref wallAngle, position, radius))
 				return true;
-
-			Debug.Log("4");
 
 			DefineByNearestEdge(ref touchPoint, ref wallAngle, position, radius);
 			return true;
+		}
+
+		private bool EvaluateReflection(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
+		{
+			Vector2 bestCorner;
+			if (ClosestIsCorner(ref touchPoint, ref wallAngle, position, radius, out bestCorner))
+				return IsCloseEnough(bestCorner, position, radius);
+
+			return IsOutOfLimits(ref touchPoint, ref wallAngle, position, radius);
 		}
 
 		private void DefineByNearestEdge(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
@@ -201,8 +202,6 @@ namespace NoPhysArkanoid.Forms
 
 		private static bool IsCloseEnough(Vector3 point1, Vector3 point2, float maxDistance)
 		{
-			Debug.Log($"[is close]>> {point1}:{point2} < {maxDistance}");
-
 			var dist = (point2 - point1).magnitude;
 
 			if (dist > maxDistance)
@@ -272,6 +271,18 @@ namespace NoPhysArkanoid.Forms
 
 			return true;
 		}
+
+		private bool IsInCloseBox(Vector3 point)
+		{
+			if (point.x < _left || point.x > _right)
+				return false;
+
+			if (point.y < _bottom || point.y > _top)
+				return false;
+
+			return true;
+		}
+
 	}
 } 
 
