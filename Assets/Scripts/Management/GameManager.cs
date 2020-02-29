@@ -21,7 +21,7 @@ namespace NoPhysArkanoid.Management
 
 		private void Awake()
 		{
-			DontDestroyOnLoad(gameObject);
+			//DontDestroyOnLoad(gameObject);
 			Subscribe();
 		}
 

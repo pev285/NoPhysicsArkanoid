@@ -38,7 +38,7 @@ namespace NoPhysArkanoid.Forms
 
 		private void AdjustColor()
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 	}
 } 

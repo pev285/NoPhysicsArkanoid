@@ -8,6 +8,26 @@ namespace NoPhysArkanoid.Forms
 {
 	public class Racket : BallsReflector
 	{
+		private Transform _transform;
+
+		protected override void Awake()
+		{
+			base.Awake();
+			_transform = transform;
+		}
+
+		private void Start()
+		{
+			EventBuss.Input.RacketPositionRequested += AdjustTargetPosition;
+		}
+
+		private void AdjustTargetPosition(float x)
+		{
+			var position = _transform.position;
+			position.x = x;
+			_transform.position = position;
+		}
+
 		protected override void Update()
 		{
 			base.Update();
