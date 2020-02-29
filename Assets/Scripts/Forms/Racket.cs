@@ -21,6 +21,11 @@ namespace NoPhysArkanoid.Forms
 			EventBuss.Input.RacketPositionRequested += AdjustTargetPosition;
 		}
 
+		private void OnDestroy()
+		{
+			EventBuss.Input.RacketPositionRequested -= AdjustTargetPosition;
+		}
+
 		private void AdjustTargetPosition(float x)
 		{
 			var position = _transform.position;

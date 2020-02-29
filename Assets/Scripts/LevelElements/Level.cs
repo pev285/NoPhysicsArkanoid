@@ -1,4 +1,5 @@
 ﻿using NoPhysArkanoid.Forms;
+using NoPhysArkanoid.Management;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,8 +16,6 @@ namespace NoPhysArkanoid.LevelElements
 			Instance = this;
 		}
 		#endregion
-
-		public event Action LevelCleared = () => { };
 
 		[SerializeField]
 		private List<Ball> _balls;
@@ -53,8 +52,54 @@ namespace NoPhysArkanoid.LevelElements
 
 		private void Start()
 		{
-			Balls[0].StartBall(new Vector3(-1, 2, 0));
+			Subscribe();
 		}
+
+		private void OnDestroy()
+		{
+			Unsubscribe();
+		}
+
+		private void Subscribe()
+		{
+			EventBuss.Input.StartButtonPressed += StartABall;
+		}
+
+		private void Unsubscribe()
+		{
+			EventBuss.Input.StartButtonPressed -= StartABall;
+		}
+
+		private void Update()
+		{
+			bool[] excludes = new bool[Balls.Count];
+
+			for (int i = 0; i < _balls.Count; i++)
+			{
+				var position = _balls[i].Position;
+
+				if (GameSpaceController.IsPointVisible(position) == false)
+				{
+					Debug.Log($"{position} -- {GameSpaceController.BottomLeft} < {GameSpaceController.UpperRight}");
+					excludes[i] = true;
+				}
+			}
+
+			for (int i = excludes.Length - 1; i >= 0; i--)
+				if (excludes[i])
+				{
+					var ball = Balls[i];
+					_balls.RemoveAt(i);
+
+					ball.MarkOutOfScreen();
+
+					if (_balls.Count == 0)
+						EventBuss.InvokeLevelIsFailed();
+				}
+
+		}
+
+
 
 		public void AddBrick()
 		{
@@ -66,7 +111,7 @@ namespace NoPhysArkanoid.LevelElements
 			_bricksNumber--;
 
 			if (_bricksNumber == 0)
-				LevelCleared.Invoke();
+				EventBuss.InvokeLevelIsCleared();
 		}
 
 		public void ApplayPowerup(Powerup.Kind kind)
@@ -92,6 +137,13 @@ namespace NoPhysArkanoid.LevelElements
 					throw new ArgumentException("Unexpected powerup kind");
 			}
 		}
+
+
+		private void StartABall()
+		{
+			Balls[0].StartBall(new Vector3(1, 2, 0));
+		}
+
 	}
 } 
 

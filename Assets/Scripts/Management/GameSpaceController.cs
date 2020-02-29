@@ -61,6 +61,17 @@ namespace NoPhysArkanoid.Management
 			}
 		}
 
+		public static bool IsPointVisible(Vector2 position)
+		{
+			if (position.x > UpperRight.x || position.x < BottomLeft.x)
+				return false;
+
+			if (position.y > UpperRight.y || position.y < BottomLeft.y)
+				return false;
+
+			return true;
+		}
+
 		[SerializeField]
 		private Camera Camera;
 

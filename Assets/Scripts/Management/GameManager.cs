@@ -47,12 +47,16 @@ namespace NoPhysArkanoid.Management
 		{
 			EventBuss.LevelIsCleared += LoadNextLevel;
 			EventBuss.LevelIsFailed += ReloadCurrentLevel;
+
+			EventBuss.Input.ExitButtonPressed += Exit;
 		}
 
 		private void Unsubscribe()
 		{
 			EventBuss.LevelIsCleared -= LoadNextLevel;
 			EventBuss.LevelIsFailed -= ReloadCurrentLevel;
+
+			EventBuss.Input.ExitButtonPressed -= Exit;
 		}
 
 

@@ -13,12 +13,16 @@ namespace NoPhysArkanoid.Forms
 			Slave,
 			Moving,
 			Paused,
+			OutOfScreen,
 		}
 
 		private State _state;
 
 		private float _speed;
 		private Vector3 _direction;
+
+		private float _destroyDelay = 1f;
+		private float _destroingTimer = 0;
 
 		protected override void Awake()
 		{
@@ -70,7 +74,7 @@ namespace NoPhysArkanoid.Forms
 
 		public void ExpectColliderHit(Vector3 point, EdgeAngle angle)
 		{
-			Debug.Log($">>>> ** point={point}, angle={angle.ToString()}, currentDirection = {_direction}");
+			//Debug.Log($"** point={point}, angle={angle.ToString()}, currentDirection = {_direction}");
 
 			NextPosition = point;
 			//NextPosition = (Position + NextPosition)/2;
@@ -95,9 +99,17 @@ namespace NoPhysArkanoid.Forms
 			}
 		}
 
+		public void MarkOutOfScreen()
+		{
+			TransitionToState(State.OutOfScreen);
+		}
+
 		private void TransitionToState(State state)
 		{
 			_state = state;
+
+			if (_state == State.OutOfScreen)
+				_destroingTimer = 0;
 		}
 
 		private void Swap(ref float a, ref float b)
@@ -119,6 +131,11 @@ namespace NoPhysArkanoid.Forms
 					break;
 				case State.Paused:
 					UpdatePaused();
+					break;
+				case State.OutOfScreen:
+					_destroingTimer += Time.deltaTime;
+					if (_destroingTimer >= _destroyDelay)
+						Destroy(gameObject);
 					break;
 				default:
 					throw new ArgumentException("Unexpected state");
