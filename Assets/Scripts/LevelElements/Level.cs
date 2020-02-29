@@ -157,10 +157,10 @@ namespace NoPhysArkanoid.LevelElements
 					_stats.IncrementRacketSize();
 					break;
 				case Powerup.Kind.SpeedDown:
-					_stats.IncrementBallSpeed();
+					_stats.DecrementBallSpeed();
 					break;
 				case Powerup.Kind.SpeedUp:
-					_stats.DecrementBallSpeed();
+					_stats.IncrementBallSpeed();
 					break;
 				default:
 					throw new ArgumentException("Unexpected powerup kind");

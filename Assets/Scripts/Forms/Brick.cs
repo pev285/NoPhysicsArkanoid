@@ -16,12 +16,17 @@ namespace NoPhysArkanoid.Forms
 		private Powerup.Kind _powerup;
 
 		private bool _isAlive;
+		private Color _baseColor;
+
+		private Renderer _renderer;
 		private Transform _transform;
 
 		protected override void Awake()
 		{
 			base.Awake();
+
 			_transform = transform;
+			_renderer = GetComponent<Renderer>();
 		}
 
 		private void Start()
@@ -30,6 +35,9 @@ namespace NoPhysArkanoid.Forms
 			ProcessCollision += TakeDamage;
 
 			_isAlive = true;
+			_baseColor = _renderer.material.color;
+
+			AdjustColor();
 		}
 
 		private void TakeDamage(Ball ball, Vector3 point, EdgeAngle angle)
@@ -59,7 +67,7 @@ namespace NoPhysArkanoid.Forms
 
 		private void AdjustColor()
 		{
-			throw new NotImplementedException();
+			_renderer.material.color = _baseColor /(float) _health;
 		}
 	}
 } 

@@ -75,7 +75,7 @@ namespace NoPhysArkanoid.LevelElements
         [SerializeField]
         private float _racketSizeStep = 1;
         [SerializeField]
-        private float _ballSpeedStep = 1f;
+        private float _ballSpeedStep = 2f;
         [SerializeField]
         private float _ballSizeStep = 0.5f;
 
