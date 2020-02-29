@@ -49,7 +49,7 @@ MonoBehaviour:
     _ballRadius: 0.25
     _ballSpeed: 5
     _ballForce: 1
-    _racketWidth: 3
+    _racketWidth: 2
     _racketSizeStep: 1
     _ballSpeedStep: 1
     _ballSizeStep: 0.5

@@ -168,6 +168,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Environment
       objectReference: {fileID: 0}
+    - target: {fileID: 705507994, guid: f77f4f228480f9b4dbb730cb26d713ea, type: 3}
+      propertyPath: m_BoundingSphereOverride.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 705507994, guid: f77f4f228480f9b4dbb730cb26d713ea, type: 3}
+      propertyPath: m_BoundingSphereOverride.y
+      value: -1.2205205e-32
+      objectReference: {fileID: 0}
+    - target: {fileID: 705507994, guid: f77f4f228480f9b4dbb730cb26d713ea, type: 3}
+      propertyPath: m_BoundingSphereOverride.z
+      value: 7.6802246e-29
+      objectReference: {fileID: 0}
+    - target: {fileID: 705507994, guid: f77f4f228480f9b4dbb730cb26d713ea, type: 3}
+      propertyPath: m_BoundingSphereOverride.w
+      value: -9.97288e+23
+      objectReference: {fileID: 0}
     - target: {fileID: 1310103701960489238, guid: f77f4f228480f9b4dbb730cb26d713ea,
         type: 3}
       propertyPath: m_LocalPosition.x

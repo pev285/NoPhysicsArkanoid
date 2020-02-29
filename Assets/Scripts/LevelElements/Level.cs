@@ -1,4 +1,5 @@
-﻿using NoPhysArkanoid.Forms;
+﻿using NoPhysArkanoid.Collisions;
+using NoPhysArkanoid.Forms;
 using NoPhysArkanoid.Management;
 using System;
 using System.Collections;
@@ -62,44 +63,52 @@ namespace NoPhysArkanoid.LevelElements
 
 		private void Subscribe()
 		{
+			EventBuss.PowerupCollected += ApplayPowerup;
 			EventBuss.Input.StartButtonPressed += StartABall;
 		}
 
 		private void Unsubscribe()
 		{
+			EventBuss.PowerupCollected -= ApplayPowerup;
 			EventBuss.Input.StartButtonPressed -= StartABall;
 		}
 
 		private void Update()
 		{
-			bool[] excludes = new bool[Balls.Count];
+			ExcludeInvisible(_powerups);
 
-			for (int i = 0; i < _balls.Count; i++)
+			if (_balls.Count == 0)
+				return;
+
+			ExcludeInvisible(_balls);
+
+			if (_balls.Count == 0)
+				EventBuss.InvokeLevelIsFailed();
+		}
+
+		private void ExcludeInvisible<T>(List<T> figures) where T : CircleFigure
+		{
+			bool[] excludes = new bool[figures.Count];
+
+			for (int i = 0; i < figures.Count; i++)
 			{
-				var position = _balls[i].Position;
+				var position = figures[i].Position;
 
 				if (GameSpaceController.IsPointVisible(position) == false)
-				{
-					Debug.Log($"{position} -- {GameSpaceController.BottomLeft} < {GameSpaceController.UpperRight}");
 					excludes[i] = true;
-				}
 			}
 
 			for (int i = excludes.Length - 1; i >= 0; i--)
 				if (excludes[i])
 				{
-					var ball = Balls[i];
-					_balls.RemoveAt(i);
+					Debug.Log($"Excluding {i}");
 
-					ball.MarkOutOfScreen();
+					var fig = figures[i];
+					figures.RemoveAt(i);
 
-					if (_balls.Count == 0)
-						EventBuss.InvokeLevelIsFailed();
+					fig.MarkOutOfScreen();
 				}
-
 		}
-
-
 
 		public void AddBrick()
 		{
@@ -114,7 +123,27 @@ namespace NoPhysArkanoid.LevelElements
 				EventBuss.InvokeLevelIsCleared();
 		}
 
-		public void ApplayPowerup(Powerup.Kind kind)
+		public void AddPowerup(Powerup pw)
+		{
+			Debug.Log("Add Powerup");
+			_powerups.Add(pw);
+		}
+
+		public void ApplayPowerup(Powerup powerup)
+		{
+			Debug.Log("Apply powerup");
+
+			if (_powerups.Contains(powerup) == false)
+				return;
+
+			_powerups.Remove(powerup);
+			Powerup.Kind kind = powerup.PowerupKind;
+
+			Destroy(powerup.gameObject);
+			AddPowerup(kind);
+		}
+
+		private void AddPowerup(Powerup.Kind kind)
 		{
 			switch (kind)
 			{
@@ -137,7 +166,6 @@ namespace NoPhysArkanoid.LevelElements
 					throw new ArgumentException("Unexpected powerup kind");
 			}
 		}
-
 
 		private void StartABall()
 		{

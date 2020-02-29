@@ -56,7 +56,7 @@ namespace NoPhysArkanoid.LevelElements
         }
 
         [SerializeField]
-        private float _racketWidth = 3f;
+        private float _racketWidth = 2f;
         public float RacketWidth
         {
             get

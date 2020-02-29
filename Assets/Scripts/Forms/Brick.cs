@@ -1,4 +1,5 @@
-﻿using NoPhysArkanoid.LevelElements;
+﻿using NoPhysArkanoid.Collisions;
+using NoPhysArkanoid.LevelElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +12,17 @@ namespace NoPhysArkanoid.Forms
 		[SerializeField]
 		private int _health = 1;
 
+		[SerializeField]
+		private Powerup.Kind _powerup;
+
 		private bool _isAlive;
+		private Transform _transform;
+
+		protected override void Awake()
+		{
+			base.Awake();
+			_transform = transform;
+		}
 
 		private void Start()
 		{
@@ -32,13 +43,23 @@ namespace NoPhysArkanoid.Forms
 			AdjustColor();
 			if (_isAlive) return;
 
-			Level.Instance.RemoveBrick();
+			InstantiatePowerup();
+
 			Destroy(gameObject);
+			Level.Instance.RemoveBrick();
+		}
+
+		private void InstantiatePowerup()
+		{
+			if (_powerup == Powerup.Kind._none_)
+				return;
+
+			EventBuss.RequestPowerupCreation(_powerup, _transform.position);
 		}
 
 		private void AdjustColor()
 		{
-			//throw new NotImplementedException();
+			throw new NotImplementedException();
 		}
 	}
 } 

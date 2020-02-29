@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NoPhysArkanoid.Forms
+namespace NoPhysArkanoid.Collisions
 {
 	public class CircleFigure : MonoBehaviour 
 	{
+		[SerializeField]
 		private float _radius;
 		public float Radius 
 		{ 
@@ -36,6 +37,11 @@ namespace NoPhysArkanoid.Forms
 		protected virtual void Awake()
 		{
 			_transform = transform;
+		}
+
+		public virtual void MarkOutOfScreen()
+		{
+			Destroy(gameObject);
 		}
 	}
 } 

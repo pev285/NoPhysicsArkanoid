@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NoPhysArkanoid
+namespace NoPhysArkanoid.Collisions
 {
 	public enum EdgeAngle
 	{

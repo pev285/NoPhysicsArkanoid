@@ -1,4 +1,5 @@
-﻿using NoPhysArkanoid.LevelElements;
+﻿using NoPhysArkanoid.Collisions;
+using NoPhysArkanoid.LevelElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -99,7 +100,7 @@ namespace NoPhysArkanoid.Forms
 			}
 		}
 
-		public void MarkOutOfScreen()
+		public override void MarkOutOfScreen()
 		{
 			TransitionToState(State.OutOfScreen);
 		}

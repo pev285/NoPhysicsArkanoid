@@ -1,10 +1,11 @@
-﻿using NoPhysArkanoid.LevelElements;
+﻿using NoPhysArkanoid.Forms;
+using NoPhysArkanoid.LevelElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NoPhysArkanoid.Forms
+namespace NoPhysArkanoid.Collisions
 {
 	[RequireComponent(typeof(BoxFigure))]
 	public class BallsReflector : MonoBehaviour 

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace NoPhysArkanoid.Forms
+namespace NoPhysArkanoid.Collisions
 {
     public class Line
     {

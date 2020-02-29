@@ -1,4 +1,5 @@
-﻿using NoPhysArkanoid.LevelElements;
+﻿using NoPhysArkanoid.Collisions;
+using NoPhysArkanoid.LevelElements;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace NoPhysArkanoid.Forms
 	public class Racket : BallsReflector
 	{
 		private Transform _transform;
+		private List<Powerup> _powerupsToApplay = new List<Powerup>();
 
 		protected override void Awake()
 		{
@@ -18,15 +20,37 @@ namespace NoPhysArkanoid.Forms
 
 		private void Start()
 		{
-			EventBuss.Input.RacketPositionRequested += AdjustTargetPosition;
+			Subscribe();
+			UpdateWidth();
 		}
 
 		private void OnDestroy()
 		{
-			EventBuss.Input.RacketPositionRequested -= AdjustTargetPosition;
+			Unsubscribe();
 		}
 
-		private void AdjustTargetPosition(float x)
+		private void Subscribe()
+		{
+			Level.Instance.Stats.Modified += UpdateWidth;
+			EventBuss.Input.RacketPositionRequested += UpdateTargetPosition;
+		}
+
+		private void Unsubscribe()
+		{
+			Level.Instance.Stats.Modified -= UpdateWidth;
+			EventBuss.Input.RacketPositionRequested -= UpdateTargetPosition;
+		}
+
+		private void UpdateWidth()
+		{
+			var scale = _transform.localScale;
+			var width = Level.Instance.Stats.RacketWidth;
+
+			scale.x = width;
+			_transform.localScale = scale;
+		}
+
+		private void UpdateTargetPosition(float x)
 		{
 			var position = _transform.position;
 			position.x = x;
@@ -47,12 +71,16 @@ namespace NoPhysArkanoid.Forms
 				Vector3 point = Vector3.zero;
 				EdgeAngle angle = EdgeAngle.Zero;
 
+
 				if (_boxFigure.CheckCollision(pw, out point, out angle))
-					pw.Apply();
+					_powerupsToApplay.Add(pw);
 			}
+
+			foreach(var pw in _powerupsToApplay)
+				EventBuss.InvokePowerupCollected(pw);
+
+			_powerupsToApplay.Clear();
 		}
-
-
 	}
 } 
 

@@ -1,11 +1,13 @@
-﻿using System;
+﻿using NoPhysArkanoid.Forms;
+using NoPhysArkanoid.LevelElements;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace NoPhysArkanoid
 {
-	public static class EventBuss 
+	public static class EventBuss
 	{
 		public static class Input
 		{
@@ -33,7 +35,8 @@ namespace NoPhysArkanoid
 		public static event Action LevelIsFailed = () => { };
 		public static event Action LevelIsCleared = () => { };
 
-		//public static InputEvents Input { get; private set; }
+		public static event Action<Powerup> PowerupCollected = (p) => { };
+		public static event Action<Powerup.Kind, Vector3> PowerupCreationRequested = (a, b) => { };
 
 		public static void InvokeLevelIsCleared()
 		{
@@ -43,6 +46,16 @@ namespace NoPhysArkanoid
 		public static void InvokeLevelIsFailed()
 		{
 			LevelIsFailed();
+		}
+
+		public static void InvokePowerupCollected(Powerup powerup)
+		{
+			PowerupCollected.Invoke(powerup);
+		}
+
+		public static void RequestPowerupCreation(Powerup.Kind kind, Vector3 position)
+		{
+			PowerupCreationRequested(kind, position);
 		}
 	} 
 } 
