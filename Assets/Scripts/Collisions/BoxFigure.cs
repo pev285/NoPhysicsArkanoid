@@ -55,13 +55,11 @@ namespace NoPhysArkanoid.Collisions
 			_br = new Vector3(_right, _bottom);
 		}
 
-		public bool CheckCollision(CircleFigure circle, out Vector3 touchPoint, out EdgeAngle wallAngle)
+		public bool CheckCollision(CircleFigure circle, out Hit hit)
 		{
 			RecalculateLimits();
 
-			touchPoint = Vector3.zero;
-			wallAngle = EdgeAngle.Zero;
-
+			hit = default;
 			var radius = circle.Radius;
 
 			var position = circle.Position; //-- TODO: Use old and new positions to check trajectory --
@@ -71,25 +69,24 @@ namespace NoPhysArkanoid.Collisions
 				return false;
 
 			if (IsInCloseBox(nextPosition) == false)
-				return EvaluateReflection(ref touchPoint, ref wallAngle, nextPosition, radius);
+				return EvaluateReflection(ref hit, nextPosition, radius);
 
-			if (EvaluateReflection(ref touchPoint, ref wallAngle, position, radius))
+			if (EvaluateReflection(ref hit, position, radius))
 				return true;
 
-			DefineByNearestEdge(ref touchPoint, ref wallAngle, position, radius);
+			DefineByNearestEdge(ref hit, position, radius);
 			return true;
 		}
 
-		private bool EvaluateReflection(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
+		private bool EvaluateReflection(ref Hit hit, Vector3 position, float radius)
 		{
-			Vector2 bestCorner;
-			if (ClosestIsCorner(ref touchPoint, ref wallAngle, position, radius, out bestCorner))
-				return IsCloseEnough(bestCorner, position, radius);
+			if (ClosestIsCorner(ref hit, position, radius))
+				return IsCloseEnough(hit.Position, position, radius);
 
-			return IsOutOfLimits(ref touchPoint, ref wallAngle, position, radius);
+			return IsOutOfLimits(ref hit, position, radius);
 		}
 
-		private void DefineByNearestEdge(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
+		private void DefineByNearestEdge(ref Hit hit, Vector3 position, float radius)
 		{
 			Vector3 leftPoint = Line.CreateFromTwoPoints(_tl, _bl).GetProjectionOf(position);
 			Vector3 rightPoint = Line.CreateFromTwoPoints(_tr, _br).GetProjectionOf(position);
@@ -102,101 +99,86 @@ namespace NoPhysArkanoid.Collisions
 			var topDistance = (position - topPoint).magnitude;
 			var bottomDistance = (position - bottomPoint).magnitude;
 
-			touchPoint = leftPoint;
-			touchPoint.x -= radius;
+			hit.Position = leftPoint;
+			hit.Normal = Vector3.left;
+			hit.Angle = EdgeAngle.D90;
 
-			wallAngle = EdgeAngle.D90;
 			var distance = leftDistance;
-
 
 			if (rightDistance < distance)
 			{
-				touchPoint = rightPoint;
-				touchPoint.x += radius;
+				hit.Position = rightPoint;
+				hit.Normal = Vector3.right;
+				hit.Angle = EdgeAngle.D90;
 
-				wallAngle = EdgeAngle.D90;
 				distance = rightDistance;
 			}
 
 			if (topDistance < distance)
 			{
-				touchPoint = topPoint;
-				touchPoint.y += radius;
+				hit.Position = topPoint;
+				hit.Normal = Vector3.up;
+				hit.Angle = EdgeAngle.Zero;
 
-				wallAngle = EdgeAngle.Zero;
 				distance = topDistance;
 			}
 
 			if (bottomDistance < distance)
 			{
-				touchPoint = bottomPoint;
-				touchPoint.y -= radius;
-
-				wallAngle = EdgeAngle.Zero;
-				distance = bottomDistance;
+				hit.Position = bottomPoint;
+				hit.Normal = Vector3.down;
+				hit.Angle = EdgeAngle.Zero;
 			}
 		}
 
-		private bool IsOutOfLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
+		private bool IsOutOfLimits(ref Hit hit, Vector3 position, float radius)
 		{
-			if (IsOutOfXLimits(ref touchPoint, ref wallAngle, position, radius))
+			if (IsOutOfXLimits(ref hit, position, radius))
 				return true;
 
-			if (IsOutOfYLimits(ref touchPoint, ref wallAngle, position, radius))
+			if (IsOutOfYLimits(ref hit, position, radius))
 				return true;
 
 			return false;
 		}
 
-		private bool IsOutOfXLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
+		private bool IsOutOfXLimits(ref Hit hit, Vector3 position, float radius)
 		{
 			if (position.x > _left && position.x < _right)
 				return false;
 
-			float shift = 0;
-			Line line = null;
-
 			if (position.x >= _right)
 			{
-				shift = radius;
-				line = Line.CreateFromTwoPoints(_tr, _br);
+				hit.Normal = Vector3.right;
+				hit.Position = Line.CreateFromTwoPoints(_tr, _br).GetProjectionOf(position);
 			}
 			else
 			{
-				shift = -radius;
-				line = Line.CreateFromTwoPoints(_tl, _bl);
+				hit.Normal = Vector3.left;
+				hit.Position = Line.CreateFromTwoPoints(_tl, _bl).GetProjectionOf(position);
 			}
 
-			wallAngle = EdgeAngle.D90;
-			touchPoint = line.GetProjectionOf(position);
-
-			touchPoint.x += shift;
+			hit.Angle = EdgeAngle.D90;
 			return true;
 		}
 
-		private bool IsOutOfYLimits(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
+		private bool IsOutOfYLimits(ref Hit hit, Vector3 position, float radius)
 		{
 			if (position.y > _bottom && position.y < _top)
 				return false;
 
-			float shift = 0;
-			Line line = null;
-
 			if (position.y >= _top)
 			{
-				shift = radius;
-				line = Line.CreateFromTwoPoints(_tl, _tr);
+				hit.Normal = Vector3.up;
+				hit.Position = Line.CreateFromTwoPoints(_tl, _tr).GetProjectionOf(position);
 			}
 			else
 			{
-				shift = -radius;
-				line = Line.CreateFromTwoPoints(_bl, _br);
+				hit.Normal = Vector3.down;
+				hit.Position = Line.CreateFromTwoPoints(_bl, _br).GetProjectionOf(position);
 			}
 
-			wallAngle = EdgeAngle.Zero;
-			touchPoint = line.GetProjectionOf(position);
-
-			touchPoint.y += shift;
+			hit.Angle = EdgeAngle.Zero;
 			return true;
 		}
 
@@ -210,50 +192,53 @@ namespace NoPhysArkanoid.Collisions
 			return true;
 		}
 
-		private bool ClosestIsCorner(ref Vector3 point, ref EdgeAngle angle, Vector3 position, float radius, out Vector2 bestCorner)
+		private bool ClosestIsCorner(ref Hit hit, Vector3 position, float radius)
 		{
-			bestCorner = Vector2.zero;
-
-			var thePointIsCorner = false;
-			float shift = radius * _sqrt2;
-
 			if (position.x > _right && position.y > _top)
 			{
-				bestCorner = _tr;
-				point = _tr + new Vector3(shift, shift);
+				hit.Angle= EdgeAngle.D45;
+				hit.Normal = new Vector3(radius, radius).normalized;
 
-				angle = EdgeAngle.D45;
-				thePointIsCorner = true;
+				var line = Line.CreateFromPointAndNormal(_tr, hit.Normal);
+				hit.Position = line.GetProjectionOf(position);
+
+				return true;
 			}
 
 			if (position.x < _left && position.y > _top)
 			{
-				bestCorner = _tl;
-				point = _tl + new Vector3(-shift, shift);
+				hit.Angle = EdgeAngle.D135;
+				hit.Normal = new Vector3(-radius, radius).normalized;
 
-				angle = EdgeAngle.D135;
-				thePointIsCorner = true;
+				var line = Line.CreateFromPointAndNormal(_tl, hit.Normal);
+				hit.Position = line.GetProjectionOf(position);
+
+				return true;
 			}
 
 			if (position.x > _right && position.y < _bottom)
 			{
-				bestCorner = _br;
-				point = _br + new Vector3(shift, -shift);
+				hit.Angle = EdgeAngle.D135;
+				hit.Normal = new Vector3(radius, -radius).normalized;
 
-				angle = EdgeAngle.D135;
-				thePointIsCorner = true;
+				var line = Line.CreateFromPointAndNormal(_br, hit.Normal);
+				hit.Position = line.GetProjectionOf(position);
+
+				return true;
 			}
 
 			if (position.x < _left && position.y < _bottom)
 			{
-				bestCorner = _bl;
-				point = _bl + new Vector3(-shift, -shift);
+				hit.Angle = EdgeAngle.D45;
+				hit.Normal = new Vector3(-radius, -radius).normalized;
 
-				angle = EdgeAngle.D45;
-				thePointIsCorner = true;
+				var line = Line.CreateFromPointAndNormal(_bl, hit.Normal);
+				hit.Position = line.GetProjectionOf(position);
+
+				return true;
 			}
 
-			return thePointIsCorner;
+			return false;
 		}
 
 		private bool IsInExtendedBox(float extension, Vector2 point)

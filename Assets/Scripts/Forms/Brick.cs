@@ -40,7 +40,7 @@ namespace NoPhysArkanoid.Forms
 			AdjustColor();
 		}
 
-		private void TakeDamage(Ball ball, Vector3 point, EdgeAngle angle)
+		private void TakeDamage(Ball ball, Hit hit)
 		{
 			if (_isAlive == false)
 				return;

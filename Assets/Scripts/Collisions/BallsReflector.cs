@@ -10,12 +10,12 @@ namespace NoPhysArkanoid.Collisions
 	[RequireComponent(typeof(BoxFigure))]
 	public class BallsReflector : MonoBehaviour 
 	{
-		public event Action<Ball, Vector3, EdgeAngle> ProcessCollision = (a, b, c) => { };
+		public event Action<Ball, Hit> ProcessCollision = (a, b) => { };
 
-		private void ReflectBall(Ball ball, Vector3 touchPoint, EdgeAngle wallAngle)
+		private void ReflectBall(Ball ball, Hit hit)
 		{
-			ball.ExpectColliderHit(touchPoint, wallAngle);
-			ProcessCollision.Invoke(ball, touchPoint, wallAngle);
+			ball.ExpectColliderHit(hit);
+			ProcessCollision.Invoke(ball, hit);
 		}
 
 		protected BoxFigure _boxFigure;
@@ -34,11 +34,10 @@ namespace NoPhysArkanoid.Collisions
 
 			foreach(var ball in balls)
 			{
-				Vector3 point = Vector3.zero;
-				EdgeAngle angle = EdgeAngle.Zero;
+				Hit hit;
 
-				if (_boxFigure.CheckCollision(ball, out point, out angle))
-					ReflectBall(ball, point, angle);
+				if (_boxFigure.CheckCollision(ball, out hit))
+					ReflectBall(ball, hit);
 			}
 		}
 	} 
