@@ -17,6 +17,11 @@ namespace NoPhysArkanoid.Forms
 			OutOfScreen,
 		}
 
+		public bool IsMoving
+		{
+			get { return _state == State.Moving; }
+		}
+
 		private State _state;
 
 		private float _speed;
@@ -66,6 +71,10 @@ namespace NoPhysArkanoid.Forms
 			Radius = stats.BallRadius;
 		}
 
+		public void SetPosition(Vector3 position)
+		{
+			_transform.position = position;
+		}
 
 		public void StartBall(Vector3 direction)
 		{

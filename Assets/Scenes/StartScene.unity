@@ -184,6 +184,16 @@ PrefabInstance:
       propertyPath: m_BoundingSphereOverride.w
       value: -9.97288e+23
       objectReference: {fileID: 0}
+    - target: {fileID: 1310103702862106993, guid: f77f4f228480f9b4dbb730cb26d713ea,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1310103702862106993, guid: f77f4f228480f9b4dbb730cb26d713ea,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 20.267736
+      objectReference: {fileID: 0}
     - target: {fileID: 1310103701960489238, guid: f77f4f228480f9b4dbb730cb26d713ea,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -38,14 +38,18 @@ namespace NoPhysArkanoid
 		public static event Action<Powerup> PowerupCollected = (p) => { };
 		public static event Action<Powerup.Kind, Vector3> PowerupCreationRequested = (a, b) => { };
 
+		//public static event Action NeedABall = () => { };
+		public static event Func<Vector3, Ball> CreateNewBall = (p) => null;
+		//public static event Action<Ball> NewBallCreated = (b) => { };
+
 		public static void InvokeLevelIsCleared()
 		{
-			LevelIsCleared();
+			LevelIsCleared.Invoke();
 		}
 
 		public static void InvokeLevelIsFailed()
 		{
-			LevelIsFailed();
+			LevelIsFailed.Invoke();
 		}
 
 		public static void InvokePowerupCollected(Powerup powerup)
@@ -55,8 +59,23 @@ namespace NoPhysArkanoid
 
 		public static void RequestPowerupCreation(Powerup.Kind kind, Vector3 position)
 		{
-			PowerupCreationRequested(kind, position);
+			PowerupCreationRequested.Invoke(kind, position);
 		}
+
+		//public static void InvokeNeedABall()
+		//{
+		//	NeedABall.Invoke();
+		//}
+
+		public static Ball RequestNewBallCreation(Vector3 position)
+		{
+			return CreateNewBall.Invoke(position);
+		}
+
+		//public static void InvokeNewBallCreated(Ball ball)
+		//{
+		//	NewBallCreated.Invoke(ball);
+		//}
 	} 
 } 
 

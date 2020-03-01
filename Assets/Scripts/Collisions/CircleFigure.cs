@@ -32,6 +32,7 @@ namespace NoPhysArkanoid.Collisions
 		}
 		public Vector3 NextPosition { get; protected set; }
 
+		public Transform Transform { get { return _transform; } }
 		protected Transform _transform;
 
 		protected virtual void Awake()

@@ -4,6 +4,7 @@ using NoPhysArkanoid.Management;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NoPhysArkanoid.LevelElements
@@ -20,12 +21,16 @@ namespace NoPhysArkanoid.LevelElements
 
 		[SerializeField]
 		private List<Ball> _balls;
+		[SerializeField]
+		private BallStarter _starter;
 
 		[SerializeField]
 		private LevelStats _stats = new LevelStats();
 
 		private int _bricksNumber = 0;
 		private List<Powerup> _powerups = new List<Powerup>();
+
+		private List<CircleFigure> _outOfScreenFigures = new List<CircleFigure>();
 
         public ILevelStats Stats
 		{
@@ -54,6 +59,10 @@ namespace NoPhysArkanoid.LevelElements
 		private void Start()
 		{
 			Subscribe();
+			CreateNewBall();
+			//EventBuss.InvokeNeedABall();
+
+			StartCoroutine(ClearOutOfScreenFigures());
 		}
 
 		private void OnDestroy()
@@ -70,19 +79,42 @@ namespace NoPhysArkanoid.LevelElements
 
 			foreach (var pw in _powerups)
 				if (pw != null && pw.gameObject != null)
-					Destroy(pw.gameObject);	
+					Destroy(pw.gameObject);
+
+			foreach (var fig in _outOfScreenFigures)
+				if (fig != null && fig.gameObject != null)
+					Destroy(fig.gameObject);
 		}
 
 		private void Subscribe()
 		{
 			EventBuss.PowerupCollected += ApplayPowerup;
 			EventBuss.Input.StartButtonPressed += StartABall;
+
+			//EventBuss.NeedABall += CreateNewBall;
 		}
 
 		private void Unsubscribe()
 		{
 			EventBuss.PowerupCollected -= ApplayPowerup;
 			EventBuss.Input.StartButtonPressed -= StartABall;
+
+			//EventBuss.NeedABall -= CreateNewBall;
+		}
+
+		private IEnumerator ClearOutOfScreenFigures()
+		{
+			while (true)
+			{
+				//Debug.Log("----clearing figures");
+				for (int i = _outOfScreenFigures.Count - 1; i >= 0; i--)
+				{
+					var fig = _outOfScreenFigures[i];
+					if (fig == null) _outOfScreenFigures.RemoveAt(i);
+				}
+
+				yield return new WaitForSeconds(3f);
+			}
 		}
 
 		private void Update()
@@ -113,12 +145,13 @@ namespace NoPhysArkanoid.LevelElements
 			for (int i = excludes.Length - 1; i >= 0; i--)
 				if (excludes[i])
 				{
-					Debug.Log($"Excluding {i}");
+					//Debug.Log($"Excluding {i}");
 
 					var fig = figures[i];
-					figures.RemoveAt(i);
-
 					fig.MarkOutOfScreen();
+
+					figures.RemoveAt(i);
+					_outOfScreenFigures.Add(fig);
 				}
 		}
 
@@ -137,14 +170,11 @@ namespace NoPhysArkanoid.LevelElements
 
 		public void AddPowerup(Powerup pw)
 		{
-			Debug.Log("Add Powerup");
 			_powerups.Add(pw);
 		}
 
 		public void ApplayPowerup(Powerup powerup)
 		{
-			Debug.Log("Apply powerup");
-
 			if (_powerups.Contains(powerup) == false)
 				return;
 
@@ -163,7 +193,8 @@ namespace NoPhysArkanoid.LevelElements
 					_stats.IncrementBallRadius();
 					break;
 				case Powerup.Kind.ExtraBall:
-					throw new NotImplementedException();
+					CreateNewBall();
+					//EventBuss.InvokeNeedABall();
 					break;
 				case Powerup.Kind.RocketSizeUp:
 					_stats.IncrementRacketSize();
@@ -179,9 +210,32 @@ namespace NoPhysArkanoid.LevelElements
 			}
 		}
 
+		private void CreateNewBall()
+		{
+			var ball = EventBuss.RequestNewBallCreation(_starter.Position);
+
+			if (ball == null)
+				throw new Exception("Couldn't create a ball");
+
+			_balls.Add(ball);
+			_starter.Activate();
+		}
+
 		private void StartABall()
 		{
-			Balls[0].StartBall(new Vector3(1, 2, 0));
+			Vector3 direction = _starter.Direction;
+
+			foreach(var ball in _balls) 
+				if (ball.IsMoving == false)
+				{ 
+					ball.StartBall(direction);
+					break;
+				}
+
+			if (_balls.Any(b => b.IsMoving == false))
+				return;
+
+			_starter.Deactivate();
 		}
 
 	}
