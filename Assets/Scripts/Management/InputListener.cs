@@ -19,7 +19,7 @@ namespace NoPhysArkanoid.Management
 			if (Input.GetKeyDown(KeyCode.Escape))
 				EventBuss.Input.InvokeExitButton();
 
-			if (Input.GetKeyDown(KeyCode.Space))
+			if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
 				EventBuss.Input.InvokeStartButton();
 
 			if (Input.GetMouseButton(0))

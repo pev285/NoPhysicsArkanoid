@@ -69,8 +69,7 @@ namespace NoPhysArkanoid.Forms
 
 		public void StartBall(Vector3 direction)
 		{
-			_direction = direction.normalized;
-			TransitionToState(State.Moving);
+			TransitionToMovingState(direction);
 		}
 
 		public void ExpectColliderHit(Vector3 point, EdgeAngle angle)
@@ -105,12 +104,34 @@ namespace NoPhysArkanoid.Forms
 			TransitionToState(State.OutOfScreen);
 		}
 
+		private void TransitionToMovingState(Vector3 direction)
+		{
+			if (_state == State.Slave || _state == State.Paused)
+			{
+				_state = State.Moving;
+				_direction = direction.normalized;
+			}
+		}
+
 		private void TransitionToState(State state)
 		{
-			_state = state;
-
-			if (_state == State.OutOfScreen)
-				_destroingTimer = 0;
+			switch (state)
+			{
+				case State.Slave:
+					_state = state;
+					break;
+				case State.Moving:
+					throw new Exception("Use TransitionToMovingState() method!");
+				case State.OutOfScreen:
+					_destroingTimer = 0;
+					_state = state;
+					break;
+				case State.Paused:
+					_state = state;
+					break;
+				default:
+					throw new ArgumentException($"Unexpected state type {state}");
+			}
 		}
 
 		private void Swap(ref float a, ref float b)

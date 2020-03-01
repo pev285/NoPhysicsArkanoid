@@ -59,6 +59,18 @@ namespace NoPhysArkanoid.LevelElements
 		private void OnDestroy()
 		{
 			Unsubscribe();
+			DestroyLevelObjects();
+		}
+
+		private void DestroyLevelObjects()
+		{
+			foreach (var ball in _balls)
+				if (ball != null && ball.gameObject != null)
+					Destroy(ball.gameObject);
+
+			foreach (var pw in _powerups)
+				if (pw != null && pw.gameObject != null)
+					Destroy(pw.gameObject);	
 		}
 
 		private void Subscribe()
