@@ -81,11 +81,11 @@ namespace NoPhysArkanoid.Forms
 			TransitionToMovingState(direction);
 		}
 
-		public void ExpectColliderHit(Vector3 point, EdgeAngle angle)
+		public void ExpectColliderHit(Hit hit)
 		{
-			NextPosition = point;
+			NextPosition = hit.Position + hit.Normal * Radius * 1.1f;
 
-			switch (angle)
+			switch (hit.Angle)
 			{
 				case EdgeAngle.Zero:
 					_direction.y = -_direction.y;

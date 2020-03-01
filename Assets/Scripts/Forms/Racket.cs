@@ -68,11 +68,9 @@ namespace NoPhysArkanoid.Forms
 
 			foreach (var pw in powerups)
 			{
-				Vector3 point = Vector3.zero;
-				EdgeAngle angle = EdgeAngle.Zero;
+				Hit hit;
 
-
-				if (_boxFigure.CheckCollision(pw, out point, out angle))
+				if (_boxFigure.CheckCollision(pw, out hit))
 					_powerupsToApplay.Add(pw);
 			}
 
