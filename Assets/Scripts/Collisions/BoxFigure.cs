@@ -196,36 +196,44 @@ namespace NoPhysArkanoid.Collisions
 		{
 			if (position.x > _right && position.y > _top)
 			{
-				hit.Position = _tr;
-				hit.Normal = new Vector3(radius, radius).normalized;
 				hit.Angle= EdgeAngle.D45;
+				hit.Normal = new Vector3(radius, radius).normalized;
+
+				var line = Line.CreateFromPointAndNormal(_tr, hit.Normal);
+				hit.Position = line.GetProjectionOf(position);
 
 				return true;
 			}
 
 			if (position.x < _left && position.y > _top)
 			{
-				hit.Position = _tl;
-				hit.Normal = new Vector3(-radius, radius).normalized;
 				hit.Angle = EdgeAngle.D135;
+				hit.Normal = new Vector3(-radius, radius).normalized;
+
+				var line = Line.CreateFromPointAndNormal(_tl, hit.Normal);
+				hit.Position = line.GetProjectionOf(position);
 
 				return true;
 			}
 
 			if (position.x > _right && position.y < _bottom)
 			{
-				hit.Position = _br;
-				hit.Normal = new Vector3(radius, -radius).normalized;
 				hit.Angle = EdgeAngle.D135;
+				hit.Normal = new Vector3(radius, -radius).normalized;
+
+				var line = Line.CreateFromPointAndNormal(_br, hit.Normal);
+				hit.Position = line.GetProjectionOf(position);
 
 				return true;
 			}
 
 			if (position.x < _left && position.y < _bottom)
 			{
-				hit.Position = _bl;
-				hit.Normal = new Vector3(-radius, -radius).normalized;
 				hit.Angle = EdgeAngle.D45;
+				hit.Normal = new Vector3(-radius, -radius).normalized;
+
+				var line = Line.CreateFromPointAndNormal(_bl, hit.Normal);
+				hit.Position = line.GetProjectionOf(position);
 
 				return true;
 			}

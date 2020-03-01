@@ -104,12 +104,21 @@ namespace NoPhysArkanoid.Forms
 					throw new ArgumentException("Unexpected wall angle");
 			}
 
-			ApplyDirectionNoise();
+			ApplyDirectionNoiseAlong(hit.Normal);
 		}
 
 		private void ApplyDirectionNoise()
 		{
 			Vector3 noise = 0.3f * UnityEngine.Random.insideUnitCircle;
+
+			_direction = (_direction + noise).normalized;
+		}
+
+		private void ApplyDirectionNoiseAlong(Vector3 positiveVector)
+		{
+			Vector3 noise = 0.3f * UnityEngine.Random.insideUnitCircle;
+			if (Vector3.Dot(noise, positiveVector) < 0)
+				noise = -noise;
 
 			_direction = (_direction + noise).normalized;
 		}

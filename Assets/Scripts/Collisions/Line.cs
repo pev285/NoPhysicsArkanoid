@@ -50,6 +50,15 @@ namespace NoPhysArkanoid.Collisions
             return CreateFromABC(a, b, c);
         }
 
+        public static Line CreateFromPointAndNormal(Vector2 point, Vector2 normal)
+        {
+            var a = normal.x;
+            var b = normal.y;
+            var c = normal.x * point.x + normal.y * point.y;
+
+            return CreateFromABC(a, b, c);
+        }
+
         //--- a*x + b*y = c ---
         private static Line CreateFromABC(float a, float b, float c)
         {
