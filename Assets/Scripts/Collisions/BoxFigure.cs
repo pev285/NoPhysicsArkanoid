@@ -57,8 +57,6 @@ namespace NoPhysArkanoid.Collisions
 
 		public bool CheckCollision(CircleFigure circle, out Vector3 touchPoint, out EdgeAngle wallAngle)
 		{
-			//_circle = circle;
-
 			RecalculateLimits();
 
 			touchPoint = Vector3.zero;
@@ -81,20 +79,6 @@ namespace NoPhysArkanoid.Collisions
 			DefineByNearestEdge(ref touchPoint, ref wallAngle, position, radius);
 			return true;
 		}
-
-
-		//private CircleFigure _circle;
-		//private void OnDrawGizmos()
-		//{
-		//	RecalculateLimits();
-		//	var radius = _circle.Radius;
-
-		//	var position = _circle.Position; //-- TODO: Use old and new positions to check trajectory --
-		//	var nextPosition = _circle.NextPosition;
-
-		//	Gizmos.DrawWireSphere(nextPosition, radius);
-		//	Gizmos.DrawCube(_position, new Vector3(_width, _height, 1));
-		//}
 
 		private bool EvaluateReflection(ref Vector3 touchPoint, ref EdgeAngle wallAngle, Vector3 position, float radius)
 		{

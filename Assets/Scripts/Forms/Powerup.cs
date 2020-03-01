@@ -37,8 +37,6 @@ namespace NoPhysArkanoid.Forms
 			_transform.Rotate(Vector3.forward, RotationSpeed * Time.deltaTime);
 
 			NextPosition = Position;
-			//if (GameSpaceController.IsPointVisible(_transform.position) == false)
-			//	Destroy(gameObject);
 		}
 	} 
 } 

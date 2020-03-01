@@ -402,32 +402,32 @@ PrefabInstance:
     - target: {fileID: 7902720237914045090, guid: d0b005c2605a537418c590d1d724f137,
         type: 3}
       propertyPath: _powerup
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8520615972326805898, guid: d0b005c2605a537418c590d1d724f137,
         type: 3}
       propertyPath: _powerup
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8520615973230121603, guid: d0b005c2605a537418c590d1d724f137,
         type: 3}
       propertyPath: _powerup
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8520615973541532261, guid: d0b005c2605a537418c590d1d724f137,
         type: 3}
       propertyPath: _powerup
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8520615973220057502, guid: d0b005c2605a537418c590d1d724f137,
         type: 3}
       propertyPath: _powerup
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8520615972829340806, guid: d0b005c2605a537418c590d1d724f137,
         type: 3}
       propertyPath: _powerup
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0b005c2605a537418c590d1d724f137, type: 3}

@@ -83,10 +83,7 @@ namespace NoPhysArkanoid.Forms
 
 		public void ExpectColliderHit(Vector3 point, EdgeAngle angle)
 		{
-			//Debug.Log($"** point={point}, angle={angle.ToString()}, currentDirection = {_direction}");
-
 			NextPosition = point;
-			//NextPosition = (Position + NextPosition)/2;
 
 			switch (angle)
 			{
@@ -106,6 +103,15 @@ namespace NoPhysArkanoid.Forms
 				default:
 					throw new ArgumentException("Unexpected wall angle");
 			}
+
+			ApplyDirectionNoise();
+		}
+
+		private void ApplyDirectionNoise()
+		{
+			Vector3 noise = 0.3f * UnityEngine.Random.insideUnitCircle;
+
+			_direction = (_direction + noise).normalized;
 		}
 
 		public override void MarkOutOfScreen()

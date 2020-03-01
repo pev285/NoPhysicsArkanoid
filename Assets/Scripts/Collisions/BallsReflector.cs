@@ -12,7 +12,6 @@ namespace NoPhysArkanoid.Collisions
 	{
 		public event Action<Ball, Vector3, EdgeAngle> ProcessCollision = (a, b, c) => { };
 
-		//protected abstract void ProcessCollision(Ball ball, Vector3 hitPoint, EdgeAngle angle);
 		private void ReflectBall(Ball ball, Vector3 touchPoint, EdgeAngle wallAngle)
 		{
 			ball.ExpectColliderHit(touchPoint, wallAngle);

@@ -60,7 +60,6 @@ namespace NoPhysArkanoid.LevelElements
 		{
 			Subscribe();
 			CreateNewBall();
-			//EventBuss.InvokeNeedABall();
 
 			StartCoroutine(ClearOutOfScreenFigures());
 		}
@@ -90,23 +89,18 @@ namespace NoPhysArkanoid.LevelElements
 		{
 			EventBuss.PowerupCollected += ApplayPowerup;
 			EventBuss.Input.StartButtonPressed += StartABall;
-
-			//EventBuss.NeedABall += CreateNewBall;
 		}
 
 		private void Unsubscribe()
 		{
 			EventBuss.PowerupCollected -= ApplayPowerup;
 			EventBuss.Input.StartButtonPressed -= StartABall;
-
-			//EventBuss.NeedABall -= CreateNewBall;
 		}
 
 		private IEnumerator ClearOutOfScreenFigures()
 		{
 			while (true)
 			{
-				//Debug.Log("----clearing figures");
 				for (int i = _outOfScreenFigures.Count - 1; i >= 0; i--)
 				{
 					var fig = _outOfScreenFigures[i];
@@ -145,8 +139,6 @@ namespace NoPhysArkanoid.LevelElements
 			for (int i = excludes.Length - 1; i >= 0; i--)
 				if (excludes[i])
 				{
-					//Debug.Log($"Excluding {i}");
-
 					var fig = figures[i];
 					fig.MarkOutOfScreen();
 
@@ -194,7 +186,6 @@ namespace NoPhysArkanoid.LevelElements
 					break;
 				case Powerup.Kind.ExtraBall:
 					CreateNewBall();
-					//EventBuss.InvokeNeedABall();
 					break;
 				case Powerup.Kind.RocketSizeUp:
 					_stats.IncrementRacketSize();
